@@ -9,6 +9,10 @@
 typedef struct {
     int selected_row;
     int selected_col;
+    int last_from_row;
+    int last_from_col;
+    int last_to_row;
+    int last_to_col;
     char piece_theme[16];
     gchar *pieces_root;
     RsvgHandle *piece_handles[12];

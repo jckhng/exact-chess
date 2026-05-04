@@ -117,10 +117,42 @@ static gboolean board_get_metrics(GtkWidget *widget,
     return TRUE;
 }
 
+static void board_clear_last_move(BoardState *state) {
+    state->last_from_row = -1;
+    state->last_from_col = -1;
+    state->last_to_row = -1;
+    state->last_to_col = -1;
+}
+
+static gboolean board_parse_uci_square(const char *move, int offset, int *row, int *col) {
+    int file;
+    int rank;
+
+    if (move == NULL || strlen(move) < (gsize)(offset + 2)) {
+        return FALSE;
+    }
+    file = move[offset] - 'a';
+    rank = move[offset + 1] - '0';
+    if (file < 0 || file > 7 || rank < 1 || rank > 8) {
+        return FALSE;
+    }
+    *col = file;
+    *row = 8 - rank;
+    return TRUE;
+}
+
+static void board_set_last_move(BoardState *state, int from_row, int from_col, int to_row, int to_col) {
+    state->last_from_row = from_row;
+    state->last_from_col = from_col;
+    state->last_to_row = to_row;
+    state->last_to_col = to_col;
+}
+
 void board_state_init(BoardState *state) {
     memset(state, 0, sizeof(*state));
     state->selected_row = -1;
     state->selected_col = -1;
+    board_clear_last_move(state);
     state->pieces_root = g_strdup(board_find_pieces_root());
     kindle_chess_backend_init(&state->backend);
     board_set_piece_theme(state, "simple");
@@ -135,6 +167,7 @@ void board_state_clear(BoardState *state) {
 void board_state_reset(BoardState *state) {
     state->selected_row = -1;
     state->selected_col = -1;
+    board_clear_last_move(state);
     kindle_chess_backend_reset(&state->backend);
 }
 
@@ -321,9 +354,16 @@ gboolean board_draw(BoardState *state, GtkWidget *widget, cairo_t *cr) {
             gdouble y = origin_y + (row * square_size);
             char piece = kindle_chess_backend_piece_at(&state->backend, row, col);
             gboolean dark = ((row + col) % 2) != 0;
+            gboolean selected = row == state->selected_row && col == state->selected_col;
+            gboolean last_from = row == state->last_from_row && col == state->last_from_col;
+            gboolean last_to = row == state->last_to_row && col == state->last_to_col;
 
-            if (row == state->selected_row && col == state->selected_col) {
+            if (selected) {
                 cairo_set_source_rgb(cr, 0.20, 0.20, 0.20);
+            } else if (last_to) {
+                cairo_set_source_rgb(cr, 0.58, 0.58, 0.58);
+            } else if (last_from) {
+                cairo_set_source_rgb(cr, 0.80, 0.80, 0.80);
             } else if (dark) {
                 cairo_set_source_rgb(cr, 0.70, 0.70, 0.70);
             } else {
@@ -333,9 +373,12 @@ gboolean board_draw(BoardState *state, GtkWidget *widget, cairo_t *cr) {
             cairo_rectangle(cr, x, y, square_size, square_size);
             cairo_fill(cr);
 
-            if (row == state->selected_row && col == state->selected_col) {
+            if (selected) {
                 cairo_set_source_rgb(cr, 0.98, 0.98, 0.98);
                 cairo_set_line_width(cr, square_size * 0.08);
+            } else if (last_from || last_to) {
+                cairo_set_source_rgb(cr, 0.05, 0.05, 0.05);
+                cairo_set_line_width(cr, square_size * 0.045);
             } else {
                 cairo_set_source_rgb(cr, 0.25, 0.25, 0.25);
                 cairo_set_line_width(cr, 1.0);
@@ -345,7 +388,7 @@ gboolean board_draw(BoardState *state, GtkWidget *widget, cairo_t *cr) {
 
             if (piece != '.') {
                 if (!board_draw_piece_svg(state, cr, piece, x, y, square_size)) {
-                    if (row == state->selected_row && col == state->selected_col) {
+                    if (selected) {
                         cairo_set_source_rgb(cr, 0.98, 0.98, 0.98);
                     } else if (isupper((unsigned char) piece)) {
                         cairo_set_source_rgb(cr, 0.05, 0.05, 0.05);
@@ -433,6 +476,7 @@ gboolean board_handle_click(BoardState *state,
                                       promotion_piece,
                                       move_out,
                                       san_out)) {
+        board_set_last_move(state, state->selected_row, state->selected_col, row, col);
         state->selected_row = -1;
         state->selected_col = -1;
         return TRUE;
@@ -452,9 +496,24 @@ gboolean board_handle_click(BoardState *state,
 }
 
 gboolean board_apply_uci_move(BoardState *state, const char *move, char san_out[32]) {
+    int from_row;
+    int from_col;
+    int to_row;
+    int to_col;
+    gboolean have_coords = board_parse_uci_square(move, 0, &from_row, &from_col) &&
+        board_parse_uci_square(move, 2, &to_row, &to_col);
+
     state->selected_row = -1;
     state->selected_col = -1;
-    return kindle_chess_backend_apply_uci(&state->backend, move, san_out);
+    if (!kindle_chess_backend_apply_uci(&state->backend, move, san_out)) {
+        return FALSE;
+    }
+    if (have_coords) {
+        board_set_last_move(state, from_row, from_col, to_row, to_col);
+    } else {
+        board_clear_last_move(state);
+    }
+    return TRUE;
 }
 
 KindleChessGameState board_get_game_state(BoardState *state) {
@@ -468,5 +527,6 @@ gboolean board_white_to_move(BoardState *state) {
 void board_undo(BoardState *state) {
     state->selected_row = -1;
     state->selected_col = -1;
+    board_clear_last_move(state);
     kindle_chess_backend_undo(&state->backend);
 }

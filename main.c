@@ -5,6 +5,16 @@
 #include "board.h"
 #include "engine_uci.h"
 
+#define KINDLE_WINDOW_TITLE "L:A_N:application_ID:kindlechess_PC:N_O:URL"
+#define KINDLE_WINDOW_TITLE_TOPBAR "L:A_N:application_PC:T_ID:kindlechess_O:URL"
+
+static const char *kindle_window_title(void)
+{
+    const char *value = g_getenv("KINDLE_SHOW_TOPBAR");
+    return (value != NULL && value[0] != '\0' && strcmp(value, "0") != 0) ? KINDLE_WINDOW_TITLE_TOPBAR
+                                                                          : KINDLE_WINDOW_TITLE;
+}
+
 typedef struct {
     GtkWidget *window;
     GtkWidget *drawing_area;
@@ -17,6 +27,8 @@ typedef struct {
     GtkWidget *draw_button;
     GtkWidget *quit_button;
     GtkWidget *history_view;
+    GtkWidget *history_sidebar;
+    GtkWidget *history_toggle_button;
     GtkWidget *history_first_button;
     GtkWidget *history_prev_button;
     GtkWidget *history_next_button;
@@ -48,6 +60,7 @@ typedef struct {
     gint64 last_clock_tick_us;
     int manual_result;
     char manual_reason[96];
+    gboolean history_visible;
 } App;
 
 enum {
@@ -56,6 +69,22 @@ enum {
     APP_RESULT_BLACK_WON,
     APP_RESULT_DRAW
 };
+
+static void on_history_toggle_clicked(GtkWidget *widget, gpointer user_data) {
+    App *app = (App *) user_data;
+
+    (void) widget;
+    app->history_visible = !app->history_visible;
+    if (app->history_visible) {
+        gtk_widget_show(app->history_sidebar);
+        gtk_button_set_label(GTK_BUTTON(app->history_toggle_button), "Hide Moves");
+    } else {
+        gtk_widget_hide(app->history_sidebar);
+        gtk_button_set_label(GTK_BUTTON(app->history_toggle_button), "Show Moves");
+    }
+    gtk_widget_queue_resize(app->drawing_area);
+    gtk_widget_queue_draw(app->drawing_area);
+}
 
 enum {
     APP_MODE_PLAY_WHITE = 0,
@@ -1054,7 +1083,7 @@ int main(int argc, char **argv) {
     app_set_clock_duration(&app, 5);
 
     app.window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    gtk_window_set_title(GTK_WINDOW(app.window), "L:A_N:application_ID:kindlechess_PC:N_O:URL");
+    gtk_window_set_title(GTK_WINDOW(app.window), kindle_window_title());
     gtk_window_set_default_size(GTK_WINDOW(app.window), 600, 800);
     gtk_container_set_border_width(GTK_CONTAINER(app.window), 8);
 
@@ -1072,25 +1101,25 @@ int main(int argc, char **argv) {
     gtk_box_pack_start(GTK_BOX(vbox), controls_box, FALSE, FALSE, 0);
 
     app.new_game_button = gtk_button_new_with_label("New Game");
-    gtk_box_pack_start(GTK_BOX(controls_box), app.new_game_button, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(controls_box), app.new_game_button, TRUE, TRUE, 0);
 
     app.undo_button = gtk_button_new_with_label("Undo");
-    gtk_box_pack_start(GTK_BOX(controls_box), app.undo_button, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(controls_box), app.undo_button, TRUE, TRUE, 0);
 
     app.save_button = gtk_button_new_with_label("Save");
-    gtk_box_pack_start(GTK_BOX(controls_box), app.save_button, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(controls_box), app.save_button, TRUE, TRUE, 0);
 
     app.load_button = gtk_button_new_with_label("Load");
-    gtk_box_pack_start(GTK_BOX(controls_box), app.load_button, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(controls_box), app.load_button, TRUE, TRUE, 0);
 
     app.resign_button = gtk_button_new_with_label("Resign");
-    gtk_box_pack_start(GTK_BOX(controls_box), app.resign_button, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(controls_box), app.resign_button, TRUE, TRUE, 0);
 
     app.draw_button = gtk_button_new_with_label("Draw");
-    gtk_box_pack_start(GTK_BOX(controls_box), app.draw_button, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(controls_box), app.draw_button, TRUE, TRUE, 0);
 
     app.quit_button = gtk_button_new_with_label("Quit");
-    gtk_box_pack_start(GTK_BOX(controls_box), app.quit_button, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(controls_box), app.quit_button, TRUE, TRUE, 0);
 
     settings_box_top = gtk_hbox_new(FALSE, 4);
     gtk_box_pack_start(GTK_BOX(vbox), settings_box_top, FALSE, FALSE, 0);
@@ -1143,6 +1172,9 @@ int main(int argc, char **argv) {
     gtk_combo_box_set_active(GTK_COMBO_BOX(app.theme_combo), 0);
     app_apply_high_contrast(app.theme_combo);
     app_create_settings_pair(settings_box_bottom, "Theme", app.theme_combo);
+    app.history_toggle_button = gtk_button_new_with_label("Hide Moves");
+    gtk_box_pack_start(GTK_BOX(settings_box_bottom), app.history_toggle_button, FALSE, FALSE, 0);
+    g_signal_connect(app.history_toggle_button, "clicked", G_CALLBACK(on_history_toggle_clicked), &app);
 
     content_hbox = gtk_hbox_new(FALSE, 8);
     gtk_box_pack_start(GTK_BOX(vbox), content_hbox, TRUE, TRUE, 0);
@@ -1155,6 +1187,8 @@ int main(int argc, char **argv) {
     gtk_container_add(GTK_CONTAINER(board_frame), app.drawing_area);
 
     sidebar_vbox = gtk_vbox_new(FALSE, 8);
+    app.history_sidebar = sidebar_vbox;
+    app.history_visible = TRUE;
     gtk_box_pack_start(GTK_BOX(content_hbox), sidebar_vbox, FALSE, TRUE, 0);
 
     app.white_clock_label = gtk_label_new("White: 05:00");
