@@ -7,6 +7,8 @@
 
 #define KINDLE_WINDOW_TITLE "L:A_N:application_ID:kindlechess_PC:N_O:URL"
 #define KINDLE_WINDOW_TITLE_TOPBAR "L:A_N:application_PC:T_ID:kindlechess_O:URL"
+#define KINDLE_APP_WIDTH 1072
+#define KINDLE_APP_HEIGHT 1448
 
 static const char *kindle_window_title(void)
 {
@@ -1084,7 +1086,8 @@ int main(int argc, char **argv) {
 
     app.window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_title(GTK_WINDOW(app.window), kindle_window_title());
-    gtk_window_set_default_size(GTK_WINDOW(app.window), 600, 800);
+    gtk_window_set_default_size(GTK_WINDOW(app.window), KINDLE_APP_WIDTH, KINDLE_APP_HEIGHT);
+    gtk_window_set_resizable(GTK_WINDOW(app.window), TRUE);
     gtk_container_set_border_width(GTK_CONTAINER(app.window), 8);
 
     vbox = gtk_vbox_new(FALSE, 8);
