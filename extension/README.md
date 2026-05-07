@@ -1,47 +1,47 @@
-# Kindle GlChess Extension Files
+# Exact Chess Extension Files
 
-Copy these files into your Kindle extension folder:
+Copy these files into your e-ink reader extension folder:
 
-- `config.xml` -> `/mnt/us/extensions/kindle-chess/config.xml`
-- `menu.json` -> `/mnt/us/extensions/kindle-chess/menu.json`
-- `launch_kindleglchess.sh` -> `/mnt/us/extensions/kindle-chess/launch_kindleglchess.sh`
-- `stop_kindleglchess.sh` -> `/mnt/us/extensions/kindle-chess/stop_kindleglchess.sh`
-- `tail_log_kindleglchess.sh` -> `/mnt/us/extensions/kindle-chess/tail_log_kindleglchess.sh`
+- `config.xml` -> `/mnt/us/extensions/exact-chess/config.xml`
+- `menu.json` -> `/mnt/us/extensions/exact-chess/menu.json`
+- `launch_exact_chess.sh` -> `/mnt/us/extensions/exact-chess/launch_exact_chess.sh`
+- `stop_exact_chess.sh` -> `/mnt/us/extensions/exact-chess/stop_exact_chess.sh`
+- `tail_log_exact_chess.sh` -> `/mnt/us/extensions/exact-chess/tail_log_exact_chess.sh`
 
 Optional document shortcut:
 
-- `shortcut_kindleglchess.sh` -> `/mnt/us/documents/shortcut_kindleglchess.sh`
+- `shortcut_exact_chess.sh` -> `/mnt/us/documents/shortcut_exact_chess.sh`
 
-Make the scripts executable on the Kindle:
+Make the scripts executable on the e-ink reader:
 
 ```sh
-chmod 755 /mnt/us/extensions/kindle-chess/*.sh
-chmod 755 /mnt/us/documents/shortcut_kindleglchess.sh
+chmod 755 /mnt/us/extensions/exact-chess/*.sh
+chmod 755 /mnt/us/documents/shortcut_exact_chess.sh
 ```
 
 KUAL is the reliable tap-launch path. The document shortcut is only useful on
-Kindles that have a shell-script document association installed; the stock
-Kindle home screen normally does not execute `.sh` files directly.
+e-ink readers that have a shell-script document association installed; the stock
+e-ink reader home screen normally does not execute `.sh` files directly.
 
 If tapping does nothing, launch from KUAL or run this over SSH:
 
 ```sh
-/mnt/us/extensions/kindle-chess/launch_kindleglchess.sh --restart
-tail -n 80 /mnt/us/kindle-glchess-shortcut.log
-tail -n 80 /mnt/us/kindle-glchess.log
+/mnt/us/extensions/exact-chess/launch_exact_chess.sh --restart
+tail -n 80 /mnt/us/exact-chess-shortcut.log
+tail -n 80 /mnt/us/exact-chess.log
 ```
 
 The launcher expects the app binary at:
 
-`/mnt/us/extensions/kindle-chess/bin/armhf/kindle-chess`
+`/mnt/us/extensions/exact-chess/bin/armhf/exact-chess`
 
 It will look for a Stockfish engine in this order:
 
-1. `/mnt/us/extensions/kindle-chess/bin/armhf/stockfish`
-2. `/mnt/us/extensions/kindle-chess/bin/stockfish.sh`
+1. `/mnt/us/extensions/exact-chess/bin/armhf/stockfish`
+2. `/mnt/us/extensions/exact-chess/bin/stockfish.sh`
 3. `/mnt/us/extensions/gnomegames/bin/stockfish.sh`
 
 For a fully self-contained engine package, place a compatible ARM Stockfish
 binary here:
 
-`/mnt/us/extensions/kindle-chess/bin/armhf/stockfish`
+`/mnt/us/extensions/exact-chess/bin/armhf/stockfish`

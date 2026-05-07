@@ -15,5 +15,5 @@ if [ -x "/mnt/us/extensions/gnomegames/bin/armhf/stockfish" ]; then
     exec /mnt/us/extensions/gnomegames/bin/armhf/stockfish "$@"
 fi
 
-echo "No Stockfish binary found for Kindle GlChess." >&2
+echo "No Stockfish binary found for Exact Chess." >&2
 exit 127

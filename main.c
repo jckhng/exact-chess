@@ -5,16 +5,16 @@
 #include "board.h"
 #include "engine_uci.h"
 
-#define KINDLE_WINDOW_TITLE "L:A_N:application_ID:kindlechess_PC:N_O:URL"
-#define KINDLE_WINDOW_TITLE_TOPBAR "L:A_N:application_PC:T_ID:kindlechess_O:URL"
-#define KINDLE_APP_WIDTH 1072
-#define KINDLE_APP_HEIGHT 1448
+#define EXACT_WINDOW_TITLE "L:A_N:application_ID:exactchess_PC:N_O:URL"
+#define EXACT_WINDOW_TITLE_TOPBAR "L:A_N:application_PC:T_ID:exactchess_O:URL"
+#define EXACT_APP_WIDTH 1072
+#define EXACT_APP_HEIGHT 1448
 
-static const char *kindle_window_title(void)
+static const char *exact_window_title(void)
 {
-    const char *value = g_getenv("KINDLE_SHOW_TOPBAR");
-    return (value != NULL && value[0] != '\0' && strcmp(value, "0") != 0) ? KINDLE_WINDOW_TITLE_TOPBAR
-                                                                          : KINDLE_WINDOW_TITLE;
+    const char *value = g_getenv("EXACT_SHOW_TOPBAR");
+    return (value != NULL && value[0] != '\0' && strcmp(value, "0") != 0) ? EXACT_WINDOW_TITLE_TOPBAR
+                                                                          : EXACT_WINDOW_TITLE;
 }
 
 typedef struct {
@@ -187,13 +187,13 @@ static const char *app_result_token(App *app) {
     }
 
     switch (board_get_game_state(&app->board)) {
-        case KINDLE_CHESS_CHECKMATE:
+        case EXACT_CHESS_CHECKMATE:
             return board_white_to_move(&app->board) ? "0-1" : "1-0";
-        case KINDLE_CHESS_STALEMATE:
-        case KINDLE_CHESS_DRAW:
+        case EXACT_CHESS_STALEMATE:
+        case EXACT_CHESS_DRAW:
             return "1/2-1/2";
-        case KINDLE_CHESS_CHECK:
-        case KINDLE_CHESS_ONGOING:
+        case EXACT_CHESS_CHECK:
+        case EXACT_CHESS_ONGOING:
         default:
             return "*";
     }
@@ -203,10 +203,10 @@ static gboolean app_game_is_over(App *app) {
     if (app->manual_result != APP_RESULT_NONE) {
         return TRUE;
     }
-    KindleChessGameState game_state = board_get_game_state(&app->board);
-    return game_state == KINDLE_CHESS_CHECKMATE ||
-           game_state == KINDLE_CHESS_STALEMATE ||
-           game_state == KINDLE_CHESS_DRAW;
+    ExactChessGameState game_state = board_get_game_state(&app->board);
+    return game_state == EXACT_CHESS_CHECKMATE ||
+           game_state == EXACT_CHESS_STALEMATE ||
+           game_state == EXACT_CHESS_DRAW;
 }
 
 static void app_update_status(App *app, const char *message) {
@@ -259,9 +259,9 @@ static void app_apply_high_contrast(GtkWidget *widget) {
     gtk_widget_modify_bg(widget, GTK_STATE_SELECTED, &black);
 }
 
-static void app_install_kindle_style(void) {
+static void app_install_eink_style(void) {
     gtk_rc_parse_string(
-        "style \"kindle_high_contrast\" {\n"
+        "style \"eink_high_contrast\" {\n"
         "  fg[NORMAL] = \"#000000\"\n"
         "  fg[ACTIVE] = \"#000000\"\n"
         "  fg[PRELIGHT] = \"#ffffff\"\n"
@@ -279,12 +279,12 @@ static void app_install_kindle_style(void) {
         "}\n"
         "gtk-button-images = 0\n"
         "gtk-menu-images = 0\n"
-        "class \"GtkComboBox\" style \"kindle_high_contrast\"\n"
-        "class \"GtkCellView\" style \"kindle_high_contrast\"\n"
-        "class \"GtkMenu\" style \"kindle_high_contrast\"\n"
-        "class \"GtkMenuItem\" style \"kindle_high_contrast\"\n"
-        "widget_class \"*GtkComboBox*\" style \"kindle_high_contrast\"\n"
-        "widget_class \"*GtkMenu*\" style \"kindle_high_contrast\"\n"
+        "class \"GtkComboBox\" style \"eink_high_contrast\"\n"
+        "class \"GtkCellView\" style \"eink_high_contrast\"\n"
+        "class \"GtkMenu\" style \"eink_high_contrast\"\n"
+        "class \"GtkMenuItem\" style \"eink_high_contrast\"\n"
+        "widget_class \"*GtkComboBox*\" style \"eink_high_contrast\"\n"
+        "widget_class \"*GtkMenu*\" style \"eink_high_contrast\"\n"
     );
 }
 
@@ -449,7 +449,7 @@ static void app_rebuild_engine_history(App *app) {
 }
 
 static void app_refresh_status(App *app, const char *fallback_message) {
-    KindleChessGameState game_state = board_get_game_state(&app->board);
+    ExactChessGameState game_state = board_get_game_state(&app->board);
     gboolean white_to_move = board_white_to_move(&app->board);
 
     if (app->manual_result != APP_RESULT_NONE) {
@@ -467,7 +467,7 @@ static void app_refresh_status(App *app, const char *fallback_message) {
     }
 
     switch (game_state) {
-        case KINDLE_CHESS_CHECK:
+        case EXACT_CHESS_CHECK:
         {
             gchar *turn_message = app_build_turn_message(app);
             gchar *message = g_strdup_printf("%s to move and in check. %s", white_to_move ? "White" : "Black", turn_message);
@@ -476,17 +476,17 @@ static void app_refresh_status(App *app, const char *fallback_message) {
             g_free(turn_message);
             break;
         }
-        case KINDLE_CHESS_CHECKMATE:
+        case EXACT_CHESS_CHECKMATE:
             app_update_status(app, white_to_move ? "Checkmate. Black wins. Tap New Game or press u to undo." :
                                                   "Checkmate. White wins. Tap New Game or press u to undo.");
             break;
-        case KINDLE_CHESS_STALEMATE:
+        case EXACT_CHESS_STALEMATE:
             app_update_status(app, "Stalemate. Tap New Game or press u to undo.");
             break;
-        case KINDLE_CHESS_DRAW:
+        case EXACT_CHESS_DRAW:
             app_update_status(app, "Draw. Tap New Game or press u to undo.");
             break;
-        case KINDLE_CHESS_ONGOING:
+        case EXACT_CHESS_ONGOING:
         default:
             if (fallback_message != NULL && fallback_message[0] != '\0') {
                 app_update_status(app, fallback_message);
@@ -660,8 +660,8 @@ static gchar *app_build_pgn(App *app) {
     int i;
 
     pgn = g_string_new("");
-    g_string_append(pgn, "[Event \"Kindle GlChess\"]\n");
-    g_string_append(pgn, "[Site \"Kindle\"]\n");
+    g_string_append(pgn, "[Event \"Exact Chess\"]\n");
+    g_string_append(pgn, "[Site \"e-ink reader\"]\n");
     g_string_append_printf(pgn, "[Result \"%s\"]\n\n", app_result_token(app));
     for (i = 0; i < app->history_len; i += 2) {
         g_string_append_printf(pgn, "%d. %s", (i / 2) + 1, app->san_history[i]);
@@ -770,8 +770,8 @@ static gboolean app_load_pgn_file(App *app, const gchar *filename, GError **erro
         if (g_str_equal(token, "1-0") || g_str_equal(token, "0-1") || g_str_equal(token, "1/2-1/2") || g_str_equal(token, "*")) {
             break;
         }
-        if (!kindle_chess_backend_apply_move_text(&app->board.backend, token, san, uci)) {
-            g_set_error(error, g_quark_from_static_string("kindle-chess-pgn"), 1, "Failed to load move: %s", token);
+        if (!exact_chess_backend_apply_move_text(&app->board.backend, token, san, uci)) {
+            g_set_error(error, g_quark_from_static_string("exact-chess-pgn"), 1, "Failed to load move: %s", token);
             g_strfreev(tokens);
             g_free(clean);
             g_free(content);
@@ -787,6 +787,10 @@ static gboolean app_load_pgn_file(App *app, const gchar *filename, GError **erro
     g_free(clean);
     g_free(content);
     return TRUE;
+}
+
+static const gchar *app_save_path(void) {
+    return "/mnt/us/extensions/exact-chess/saves/exact-chess.pgn";
 }
 
 static gboolean on_button_press_event(GtkWidget *widget, GdkEventButton *event, gpointer user_data) {
@@ -976,15 +980,16 @@ static void on_draw_clicked(GtkWidget *widget, gpointer user_data) {
 
 static void on_save_clicked(GtkWidget *widget, gpointer user_data) {
     App *app = (App *) user_data;
-    const gchar *filename = "/mnt/us/documents/kindle-glchess.pgn";
+    const gchar *filename = app_save_path();
     gchar *pgn;
     GError *error = NULL;
 
     (void) widget;
 
+    g_mkdir_with_parents("/mnt/us/extensions/exact-chess/saves", 0755);
     pgn = app_build_pgn(app);
     if (g_file_set_contents(filename, pgn, -1, &error)) {
-        app_update_status(app, "Saved to /mnt/us/documents/kindle-glchess.pgn");
+        app_update_status(app, "Saved game.");
     } else {
         gchar *message = g_strdup_printf("Save failed: %s", error->message);
         app_update_status(app, message);
@@ -996,14 +1001,14 @@ static void on_save_clicked(GtkWidget *widget, gpointer user_data) {
 
 static void on_load_clicked(GtkWidget *widget, gpointer user_data) {
     App *app = (App *) user_data;
-    const gchar *filename = "/mnt/us/documents/kindle-glchess.pgn";
+    const gchar *filename = app_save_path();
     GError *error = NULL;
 
     (void) widget;
 
     if (app_load_pgn_file(app, filename, &error)) {
         if (!app->waiting_for_engine) {
-            app_update_status(app, "Loaded /mnt/us/documents/kindle-glchess.pgn");
+            app_update_status(app, "Loaded saved game.");
         }
     } else {
         gchar *message = g_strdup_printf("Load failed: %s", error != NULL ? error->message : "unknown error");
@@ -1074,7 +1079,7 @@ int main(int argc, char **argv) {
     GError *error = NULL;
 
     gtk_init(&argc, &argv);
-    app_install_kindle_style();
+    app_install_eink_style();
     memset(&app, 0, sizeof(app));
 
     board_state_init(&app.board);
@@ -1085,15 +1090,15 @@ int main(int argc, char **argv) {
     app_set_clock_duration(&app, 5);
 
     app.window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    gtk_window_set_title(GTK_WINDOW(app.window), kindle_window_title());
-    gtk_window_set_default_size(GTK_WINDOW(app.window), KINDLE_APP_WIDTH, KINDLE_APP_HEIGHT);
+    gtk_window_set_title(GTK_WINDOW(app.window), exact_window_title());
+    gtk_window_set_default_size(GTK_WINDOW(app.window), EXACT_APP_WIDTH, EXACT_APP_HEIGHT);
     gtk_window_set_resizable(GTK_WINDOW(app.window), TRUE);
     gtk_container_set_border_width(GTK_CONTAINER(app.window), 8);
 
     vbox = gtk_vbox_new(FALSE, 8);
     gtk_container_add(GTK_CONTAINER(app.window), vbox);
 
-    label = gtk_label_new("Kindle GlChess");
+    label = gtk_label_new("Exact Chess");
     gtk_misc_set_alignment(GTK_MISC(label), 0.5f, 0.5f);
     gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 0);
 
@@ -1249,7 +1254,7 @@ int main(int argc, char **argv) {
     g_signal_connect(app.promotion_combo, "changed", G_CALLBACK(on_promotion_changed), &app);
     g_signal_connect(app.theme_combo, "changed", G_CALLBACK(on_theme_changed), &app);
 
-    engine_path = g_getenv("KINDLE_CHESS_ENGINE");
+    engine_path = g_getenv("EXACT_CHESS_ENGINE");
     if (engine_path == NULL || engine_path[0] == '\0') {
         engine_path = "/mnt/us/extensions/gnomegames/bin/stockfish.sh";
     }

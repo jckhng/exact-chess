@@ -6,5 +6,5 @@ CONTAINER="$("$ROOT/docker_start_builder.sh" | tail -n 1)"
 UID_HOST="$(id -u)"
 GID_HOST="$(id -g)"
 
-docker exec "$CONTAINER" chown -R "$UID_HOST:$GID_HOST" /src/kindle-glchess
+docker exec "$CONTAINER" chown -R "$UID_HOST:$GID_HOST" /src/exact-chess
 exec docker exec -it --user "$UID_HOST:$GID_HOST" "$CONTAINER" /bin/bash

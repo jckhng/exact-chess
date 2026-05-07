@@ -41,13 +41,11 @@ static int board_piece_index(char piece) {
 
 static const char *board_find_pieces_root(void) {
     static const char *paths[] = {
-        "/mnt/us/extensions/kindle-chess/share/glchess/pieces",
-        "/mnt/us/extensions/gnomegames/share/glchess/pieces",
-        "/home/jack/GnomeGames4Kindle/glchess/data/pieces",
-        "../glchess/data/pieces",
+        "/mnt/us/extensions/exact-chess/share/exact-chess/pieces",
+        "assets/pieces",
         NULL
     };
-    const char *env = g_getenv("KINDLE_CHESS_PIECES_DIR");
+    const char *env = g_getenv("EXACT_CHESS_PIECES_DIR");
     int i;
 
     if (env != NULL && g_file_test(env, G_FILE_TEST_IS_DIR)) {
@@ -154,21 +152,21 @@ void board_state_init(BoardState *state) {
     state->selected_col = -1;
     board_clear_last_move(state);
     state->pieces_root = g_strdup(board_find_pieces_root());
-    kindle_chess_backend_init(&state->backend);
+    exact_chess_backend_init(&state->backend);
     board_set_piece_theme(state, "simple");
 }
 
 void board_state_clear(BoardState *state) {
     board_clear_piece_handles(state);
     g_clear_pointer(&state->pieces_root, g_free);
-    kindle_chess_backend_clear(&state->backend);
+    exact_chess_backend_clear(&state->backend);
 }
 
 void board_state_reset(BoardState *state) {
     state->selected_row = -1;
     state->selected_col = -1;
     board_clear_last_move(state);
-    kindle_chess_backend_reset(&state->backend);
+    exact_chess_backend_reset(&state->backend);
 }
 
 void board_set_piece_theme(BoardState *state, const char *theme_name) {
@@ -352,7 +350,7 @@ gboolean board_draw(BoardState *state, GtkWidget *widget, cairo_t *cr) {
         for (col = 0; col < 8; col++) {
             gdouble x = origin_x + (col * square_size);
             gdouble y = origin_y + (row * square_size);
-            char piece = kindle_chess_backend_piece_at(&state->backend, row, col);
+            char piece = exact_chess_backend_piece_at(&state->backend, row, col);
             gboolean dark = ((row + col) % 2) != 0;
             gboolean selected = row == state->selected_row && col == state->selected_col;
             gboolean last_from = row == state->last_from_row && col == state->last_from_col;
@@ -443,7 +441,7 @@ gboolean board_handle_click(BoardState *state,
         return FALSE;
     }
 
-    piece = kindle_chess_backend_piece_at(&state->backend, row, col);
+    piece = exact_chess_backend_piece_at(&state->backend, row, col);
 
     if (state->selected_row == -1 || state->selected_col == -1) {
         if (board_piece_matches_turn(state, piece)) {
@@ -468,7 +466,7 @@ gboolean board_handle_click(BoardState *state,
         return TRUE;
     }
 
-    if (kindle_chess_backend_try_move(&state->backend,
+    if (exact_chess_backend_try_move(&state->backend,
                                       state->selected_row,
                                       state->selected_col,
                                       row,
@@ -505,7 +503,7 @@ gboolean board_apply_uci_move(BoardState *state, const char *move, char san_out[
 
     state->selected_row = -1;
     state->selected_col = -1;
-    if (!kindle_chess_backend_apply_uci(&state->backend, move, san_out)) {
+    if (!exact_chess_backend_apply_uci(&state->backend, move, san_out)) {
         return FALSE;
     }
     if (have_coords) {
@@ -516,17 +514,17 @@ gboolean board_apply_uci_move(BoardState *state, const char *move, char san_out[
     return TRUE;
 }
 
-KindleChessGameState board_get_game_state(BoardState *state) {
-    return kindle_chess_backend_state(&state->backend);
+ExactChessGameState board_get_game_state(BoardState *state) {
+    return exact_chess_backend_state(&state->backend);
 }
 
 gboolean board_white_to_move(BoardState *state) {
-    return kindle_chess_backend_white_to_move(&state->backend);
+    return exact_chess_backend_white_to_move(&state->backend);
 }
 
 void board_undo(BoardState *state) {
     state->selected_row = -1;
     state->selected_col = -1;
     board_clear_last_move(state);
-    kindle_chess_backend_undo(&state->backend);
+    exact_chess_backend_undo(&state->backend);
 }

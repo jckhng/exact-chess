@@ -1,5 +1,5 @@
-#ifndef KINDLE_CHESS_ENGINE_UCI_H
-#define KINDLE_CHESS_ENGINE_UCI_H
+#ifndef EXACT_CHESS_ENGINE_UCI_H
+#define EXACT_CHESS_ENGINE_UCI_H
 
 #include <glib.h>
 

@@ -1,15 +1,16 @@
 # Provenance And Licensing
 
-Kindle GlChess is an unofficial Kindle-focused derivative of GNOME Chess /
-glchess rules and assets from GNOME Games.
+Exact Chess is an unofficial e-ink-focused derivative application based in
+part on GNOME Chess and GNOME Games rules code and artwork.
 
-It is also informed by the GnomeGames4Kindle porting work. Original GNOME Chess
-code and artwork remain credited to the GNOME Games authors. Kindle porting
-groundwork and packaging references are credited to GnomeGames4Kindle and its
-author(s).
+It also benefited from prior GNOME Games e-ink/KUAL porting and packaging work
+by ThatPotatoDev and contributors. Original GNOME Chess code and artwork remain
+credited to the GNOME Games authors. Prior e-ink/KUAL porting work is credited
+for launch, runtime, and packaging ideas.
 
-This repository is not an official GNOME project and is not an official
-GnomeGames4Kindle release.
+This repository is not an official GNOME project and is not affiliated with or
+endorsed by GNOME, the GNOME Foundation, device manufacturers, or the prior
+e-ink/KUAL porting projects it credits.
 
 ## What Comes From GNOME Chess
 
@@ -18,13 +19,13 @@ GnomeGames4Kindle release.
 - Piece SVG artwork in `assets/pieces/simple` and `assets/pieces/fancy`.
 - Project licensing basis in `licenses/`.
 
-## What Is Kindle-Specific
+## What Is E-Ink Specific
 
-- `main.c`, `board.c`, and related glue for a compact GTK2/Cairo Kindle UI.
+- `main.c`, `board.c`, and related glue for a compact GTK2/Cairo e-ink UI.
 - KUAL extension files in `extension/`.
 - Docker ARM build and packaging scripts.
-- Runtime-library bundling for easier Kindle installation.
-- Release packaging and Kindle launch scripts maintained for this derivative.
+- Runtime-library bundling for easier KUAL installation.
+- Release packaging and KUAL launch scripts maintained for this derivative.
 
 ## License Notes
 
@@ -40,8 +41,8 @@ Those libraries keep their own upstream licenses. The generated extension
 package includes:
 
 ```text
-extensions/kindle-chess/LICENSES/RUNTIME-LIBS.txt
-extensions/kindle-chess/LICENSES/THIRD-PARTY-NOTICE.txt
+extensions/exact-chess/LICENSES/RUNTIME-LIBS.txt
+extensions/exact-chess/LICENSES/THIRD-PARTY-NOTICE.txt
 ```
 
 If publishing binary releases, keep the license files and runtime notices with

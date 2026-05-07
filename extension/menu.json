@@ -1,37 +1,37 @@
 {
   "items": [
     {
-      "name": "Kindle GlChess",
+      "name": "Exact Chess",
       "priority": 100,
       "items": [
         {
           "name": "Launch",
           "priority": 10,
-          "action": "/bin/sh ./launch_kindleglchess.sh",
+          "action": "/bin/sh ./launch_exact_chess.sh",
           "exitmenu": true
         },
         {
           "name": "Restart",
           "priority": 20,
-          "action": "/bin/sh ./launch_kindleglchess.sh --restart",
+          "action": "/bin/sh ./launch_exact_chess.sh --restart",
           "exitmenu": true
         },
         {
           "name": "Launch With Topbar",
           "priority": 25,
-          "action": "env KINDLE_SHOW_TOPBAR=1 /bin/sh ./launch_kindleglchess.sh --restart",
+          "action": "env EXACT_SHOW_TOPBAR=1 /bin/sh ./launch_exact_chess.sh --restart",
           "exitmenu": true
         },
         {
           "name": "Stop",
           "priority": 30,
-          "action": "/bin/sh ./stop_kindleglchess.sh",
+          "action": "/bin/sh ./stop_exact_chess.sh",
           "exitmenu": false
         },
         {
           "name": "Tail Log",
           "priority": 40,
-          "action": "/bin/sh ./tail_log_kindleglchess.sh",
+          "action": "/bin/sh ./tail_log_exact_chess.sh",
           "exitmenu": false
         }
       ]

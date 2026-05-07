@@ -1,4 +1,4 @@
-# Building Kindle GlChess
+# Building Exact Chess
 
 ## Requirements
 
@@ -25,15 +25,15 @@ From the repository root:
 This creates or reuses:
 
 ```text
-image:     kindle-glchess-armhf-build:bullseye
-container: kindle-glchess-armhf-builder
+image:     exact-chess-armhf-build:bullseye
+container: exact-chess-armhf-builder
 ```
 
 The build output is:
 
 ```text
-kindle-chess
-dist/kindle-glchess-extension.zip
+exact-chess
+dist/exact-chess-extension.zip
 ```
 
 The script also runs:
@@ -45,7 +45,7 @@ smoke-test
 ## Build Without Packaging
 
 ```bash
-KINDLE_CHESS_PACKAGE=0 ./docker_rebuild.sh
+EXACT_CHESS_PACKAGE=0 ./docker_rebuild.sh
 ```
 
 ## Shell Into The Builder
@@ -58,7 +58,7 @@ Inside the container:
 
 ```bash
 make clean
-make kindle-chess smoke-test
+make exact-chess smoke-test
 ./smoke-test
 ```
 
@@ -72,7 +72,7 @@ If you moved the repository and the persistent container still points at an old
 checkout, recreate it:
 
 ```bash
-docker rm -f kindle-glchess-armhf-builder
+docker rm -f exact-chess-armhf-builder
 ./docker_rebuild.sh
 ```
 
@@ -85,7 +85,7 @@ development headers:
 make
 ```
 
-For actual Kindle releases, prefer the Docker ARM build so the binary ABI
+For actual e-ink releases, prefer the Docker ARM build so the binary ABI
 matches the bundled runtime.
 
 ## Packaging Details
@@ -93,14 +93,14 @@ matches the bundled runtime.
 `package_extension.sh` creates:
 
 ```text
-dist/extensions/kindle-chess
-dist/documents/shortcut_kindleglchess.sh
-dist/kindle-glchess-extension.zip
+dist/extensions/exact-chess
+dist/documents/shortcut_exact_chess.sh
+dist/exact-chess-extension.zip
 ```
 
 The package contains:
 
-- ARM `kindle-chess` executable.
+- ARM `exact-chess` executable.
 - KUAL `config.xml` and `menu.json`.
 - Launch/stop/log helper scripts.
 - GNOME Chess piece SVG assets.

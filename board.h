@@ -1,10 +1,10 @@
-#ifndef KINDLE_CHESS_BOARD_H
-#define KINDLE_CHESS_BOARD_H
+#ifndef EXACT_CHESS_BOARD_H
+#define EXACT_CHESS_BOARD_H
 
 #include <gtk/gtk.h>
 #include <librsvg/rsvg.h>
 
-#include "glchess_backend.h"
+#include "exact_chess_backend.h"
 
 typedef struct {
     int selected_row;
@@ -16,7 +16,7 @@ typedef struct {
     char piece_theme[16];
     gchar *pieces_root;
     RsvgHandle *piece_handles[12];
-    KindleChessBackend backend;
+    ExactChessBackend backend;
 } BoardState;
 
 void board_state_init(BoardState *state);
@@ -32,7 +32,7 @@ gboolean board_handle_click(BoardState *state,
                             char move_out[6],
                             char san_out[32]);
 gboolean board_apply_uci_move(BoardState *state, const char *move, char san_out[32]);
-KindleChessGameState board_get_game_state(BoardState *state);
+ExactChessGameState board_get_game_state(BoardState *state);
 gboolean board_white_to_move(BoardState *state);
 void board_undo(BoardState *state);
 

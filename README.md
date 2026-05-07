@@ -1,24 +1,24 @@
-# Kindle GlChess
+# Exact Chess
 
-A Kindle-friendly chess app derived from GNOME Chess rules and assets.
+An e-ink-friendly chess app derived from GNOME Chess rules and assets.
 
-![Kindle GlChess running on Kindle](screenshots/kindle-glchess.png)
+![Exact Chess running on e-ink reader](screenshots/exact-chess.png)
 
-Kindle GlChess is an unofficial Kindle-focused derivative of GNOME Chess /
-GNOME Games. It keeps GNOME Chess/glchess move rules and artwork, while
-replacing the original GNOME desktop application shell with a small GTK2/Cairo
-interface packaged for jailbroken Kindle devices.
+Exact Chess is an unofficial e-ink-focused derivative application based in
+part on GNOME Chess and GNOME Games. It keeps GNOME Chess-derived move rules
+and artwork, while replacing the original GNOME desktop application shell with
+a small GTK2/Cairo interface packaged for jailbroken KUAL-capable e-ink reader
+devices.
 
-This project is also informed by the GnomeGames4Kindle porting work. Original
-GNOME Chess code and artwork remain credited to the GNOME Games authors;
-Kindle porting groundwork and packaging references are credited to
-GnomeGames4Kindle and its author(s).
+This project also benefited from prior GNOME Games e-ink/KUAL porting and
+packaging work by ThatPotatoDev and contributors. Original GNOME Chess code
+and artwork remain credited to the GNOME Games authors.
 
 ## Features
 
-- Touch-friendly GTK2 interface sized for Kindle screens.
+- Touch-friendly GTK2 interface sized for e-ink screens.
 - Cairo-rendered board with GNOME Chess simple/fancy SVG piece themes.
-- GNOME Chess/glchess-derived legal move validation, check, checkmate, castling,
+- GNOME Chess-derived legal move validation, check, checkmate, castling,
   en passant, promotion, SAN-style move history, undo, save, and load.
 - Engine modes through an optional UCI engine, usually Stockfish: Play White,
   Play Black, and AI Demo.
@@ -30,46 +30,38 @@ GnomeGames4Kindle and its author(s).
 Use the prebuilt extension package:
 
 ```text
-release/kindle-glchess-extension.zip
+release/exact-chess-extension.zip
 ```
 
-Unzip it at the Kindle USB-storage root so it creates:
+Unzip it at the USB storage root so it creates:
 
 ```text
-/mnt/us/extensions/kindle-chess
-/mnt/us/documents/shortcut_kindleglchess.sh
+/mnt/us/extensions/exact-chess
+/mnt/us/documents/shortcut_exact_chess.sh
 ```
 
 Then launch from KUAL:
 
 ```text
-KUAL -> Kindle GlChess -> Launch
+KUAL -> Exact Chess -> Launch
 ```
 
 The document shortcut is optional. KUAL is the reliable launch path; a stock
-Kindle home screen normally will not execute `.sh` files unless another script
+e-ink reader home screen normally will not execute `.sh` files unless another script
 launcher/file association is installed.
 
-## Kindle Prerequisites
+## Prerequisites
 
-This is native Kindle homebrew. You need:
+This is native e-ink reader homebrew. You need:
 
-- A jailbroken Kindle.
+- A jailbroken e-ink reader.
 - KUAL installed.
 - MRPI installed if your jailbreak/KUAL setup uses MRPI for package installs.
 - USB access to copy this extension to `/mnt/us`.
 
-Useful current references:
-
-- Kindle Modding Wiki, jailbreak overview: https://kindlemodding.org/jailbreaking/
-- Kindle Modding Wiki, KUAL and MRPI setup: https://kindlemodding.org/jailbreaking/post-jailbreak/installing-kual-mrpi/
-- MobileRead KUAL thread: https://www.mobileread.com/forums/showthread.php?t=203326
-- MobileRead MRPI wiki: https://wiki.mobileread.com/wiki/MobileRead_Package_Installer
-- MobileRead Kindle 5.x jailbreak notes: https://wiki.mobileread.com/wiki/5_x_Jailbreak
-
-Kindle jailbreak compatibility depends on model and firmware. Follow the
+e-ink reader jailbreak compatibility depends on model and firmware. Follow the
 current guide for your exact device; do not assume a jailbreak method applies
-just because another Kindle model works.
+just because another e-ink reader model works.
 
 ## Build
 
@@ -82,10 +74,10 @@ ARMv7 Debian Bullseye container:
 
 That command:
 
-- Builds or starts the persistent `kindle-glchess-armhf-builder` container.
-- Compiles the ARM hard-float `kindle-chess` binary.
+- Builds or starts the persistent `exact-chess-armhf-builder` container.
+- Compiles the ARM hard-float `exact-chess` binary.
 - Runs `smoke-test`.
-- Packages `dist/kindle-glchess-extension.zip`.
+- Packages `dist/exact-chess-extension.zip`.
 
 If your Linux Docker install cannot run ARM containers, install binfmt support:
 
@@ -100,7 +92,7 @@ See [docs/BUILDING.md](docs/BUILDING.md) for the full build process.
 The checked-in release artifact is:
 
 ```text
-release/kindle-glchess-extension.zip
+release/exact-chess-extension.zip
 ```
 
 Verify it with:
@@ -112,10 +104,11 @@ sha256sum -c SHA256SUMS
 
 ## License And Provenance
 
-Kindle GlChess is not an official GNOME project or an official
-GnomeGames4Kindle release. It is a derivative project that includes code and
-assets from GNOME Games / GNOME Chess and keeps the applicable GPL-family
-license texts in `licenses/`.
+Exact Chess is not an official GNOME project and is not affiliated with or
+endorsed by GNOME, the GNOME Foundation, device manufacturers, or the prior
+e-ink/KUAL porting projects it credits. It is a derivative project that
+includes code and assets from GNOME Chess and GNOME Games, and keeps the
+applicable GPL-family license texts in `licenses/`.
 
 Runtime libraries bundled in the release zip keep their own upstream licenses;
 the generated package includes `LICENSES/RUNTIME-LIBS.txt` and

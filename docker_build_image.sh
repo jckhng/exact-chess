@@ -2,7 +2,7 @@
 set -eu
 
 ROOT="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
-IMAGE="${KINDLE_CHESS_DOCKER_IMAGE:-kindle-glchess-armhf-build:bullseye}"
+IMAGE="${EXACT_CHESS_DOCKER_IMAGE:-exact-chess-armhf-build:bullseye}"
 
 docker build \
     --platform linux/arm/v7 \

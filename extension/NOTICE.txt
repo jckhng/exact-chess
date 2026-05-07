@@ -1,35 +1,36 @@
-Kindle GlChess
+Exact Chess
 ===============
 
-Unofficial Kindle-friendly chess derived from GNOME Chess rules and artwork,
+Unofficial e-ink-friendly chess derived from GNOME Chess rules and artwork,
 with optional Stockfish play.
 
 This package includes:
-- the Kindle GlChess application binary
+- the Exact Chess application binary
 - launcher scripts for KUAL
 - a bundled ARM runtime library set for GTK2/Cairo/RSVG/X11
-- SVG piece themes derived from GNOME Chess / glchess
+- SVG piece themes derived from GNOME Chess
 - GPL license texts from the source tree
 
 Project lineage
 ---------------
 
-Kindle GlChess is an unofficial derivative adaptation of GNOME Chess / glchess
-for jailbroken Kindle devices. It reuses and adapts chess rules logic and
-visual assets from the upstream GNOME Games codebase.
+Exact Chess is an unofficial derivative adaptation based in part on GNOME
+Chess and GNOME Games code and assets. It reuses and adapts chess rules logic
+and visual assets from the upstream GNOME Games codebase for jailbroken
+KUAL-capable e-ink reader devices.
 
-This work is also informed by GnomeGames4Kindle porting and packaging work.
-Original GNOME Chess code and artwork remain credited to the GNOME Games
-authors. Kindle porting groundwork and packaging references are credited to
-GnomeGames4Kindle and its author(s).
+This work also benefited from prior GNOME Games e-ink/KUAL porting and
+packaging work by ThatPotatoDev and contributors. Original GNOME Chess code
+and artwork remain credited to the GNOME Games authors.
 
-This package is not an official GNOME project or an official GnomeGames4Kindle
-release.
+This package is not an official GNOME project and is not affiliated with or
+endorsed by GNOME, the GNOME Foundation, device manufacturers, or the prior
+e-ink/KUAL porting projects it credits.
 
 Licensing
 ---------
 
-The upstream GNOME Chess / glchess code in this repository is GPL-licensed.
+The upstream GNOME Chess-derived code in this repository is GPL-licensed.
 This package should be distributed with the corresponding GPL notices and
 source availability in line with that license.
 
@@ -38,7 +39,7 @@ Bundled license texts are included in the LICENSES/ directory.
 Runtime library note
 --------------------
 
-To reduce external dependencies on the Kindle, this package can bundle the
+To reduce external dependencies on the e-ink reader, this package can bundle the
 ARM shared-library runtime needed by the app. Those libraries are third-party
 components from the build environment and remain under their own licenses.
 
@@ -52,7 +53,7 @@ Engine note
 This package does not bundle a Stockfish engine binary from this repository
 unless one is explicitly supplied to the packager. The launcher will:
 
-1. use /mnt/us/extensions/kindle-chess/bin/armhf/stockfish if you add one
+1. use /mnt/us/extensions/exact-chess/bin/armhf/stockfish if you add one
 2. otherwise fall back to the stockfish wrapper/binary from gnomegames if present
 
 So the package is immediately usable as:
