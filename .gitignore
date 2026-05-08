@@ -5,6 +5,7 @@
 
 # Generated package tree
 /dist/
+/release/
 
 # Local optional engine drop-in
 /bin/armhf/stockfish

@@ -3,10 +3,11 @@
 Exact Chess is an unofficial e-ink-focused derivative application based in
 part on GNOME Chess and GNOME Games rules code and artwork.
 
-It also benefited from prior GNOME Games e-ink/KUAL porting and packaging work
-by ThatPotatoDev and contributors. Original GNOME Chess code and artwork remain
-credited to the GNOME Games authors. Prior e-ink/KUAL porting work is credited
-for launch, runtime, and packaging ideas.
+It also benefited from earlier GNOME Games e-ink/KUAL porting lineage,
+including the original work by crazy-electron and later work by ThatPotatoDev
+and contributors. Original GNOME Chess code and artwork remain credited to the
+GNOME Games authors. Prior e-ink/KUAL porting work is credited for launch,
+runtime, and packaging ideas.
 
 This repository is not an official GNOME project and is not affiliated with or
 endorsed by GNOME, the GNOME Foundation, device manufacturers, or the prior

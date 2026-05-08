@@ -19,9 +19,10 @@ Chess and GNOME Games code and assets. It reuses and adapts chess rules logic
 and visual assets from the upstream GNOME Games codebase for jailbroken
 KUAL-capable e-ink reader devices.
 
-This work also benefited from prior GNOME Games e-ink/KUAL porting and
-packaging work by ThatPotatoDev and contributors. Original GNOME Chess code
-and artwork remain credited to the GNOME Games authors.
+This work also benefited from earlier GNOME Games e-ink/KUAL porting lineage,
+including the original work by crazy-electron and later work by ThatPotatoDev
+and contributors. Original GNOME Chess code and artwork remain credited to the
+GNOME Games authors.
 
 This package is not an official GNOME project and is not affiliated with or
 endorsed by GNOME, the GNOME Foundation, device manufacturers, or the prior

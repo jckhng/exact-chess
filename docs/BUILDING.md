@@ -42,6 +42,15 @@ The script also runs:
 smoke-test
 ```
 
+The rebuild prints the SHA256 for `dist/exact-chess-extension.zip`.
+
+To also refresh `release/exact-chess-extension.zip` and
+`release/SHA256SUMS`, run:
+
+```bash
+EXACT_CHESS_RELEASE=1 ./docker_rebuild.sh
+```
+
 ## Build Without Packaging
 
 ```bash

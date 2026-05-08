@@ -10,9 +10,10 @@ and artwork, while replacing the original GNOME desktop application shell with
 a small GTK2/Cairo interface packaged for jailbroken KUAL-capable e-ink reader
 devices.
 
-This project also benefited from prior GNOME Games e-ink/KUAL porting and
-packaging work by ThatPotatoDev and contributors. Original GNOME Chess code
-and artwork remain credited to the GNOME Games authors.
+This project also benefited from earlier GNOME Games e-ink/KUAL porting
+lineage, including the original work by crazy-electron and later work by
+ThatPotatoDev and contributors. Original GNOME Chess code and artwork remain
+credited to the GNOME Games authors.
 
 ## Features
 

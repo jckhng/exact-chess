@@ -113,6 +113,7 @@ with zipfile.ZipFile("exact-chess-extension.zip", "w", zipfile.ZIP_DEFLATED) as 
         for name in files:
             path = os.path.join(root, name)
             info = zipfile.ZipInfo(path)
+            info.compress_type = zipfile.ZIP_DEFLATED
             info.external_attr = (os.stat(path).st_mode & 0o777) << 16
             with open(path, "rb") as fh:
                 zf.writestr(info, fh.read())
@@ -120,6 +121,7 @@ with zipfile.ZipFile("exact-chess-extension.zip", "w", zipfile.ZIP_DEFLATED) as 
         for name in files:
             path = os.path.join(root, name)
             info = zipfile.ZipInfo(path)
+            info.compress_type = zipfile.ZIP_DEFLATED
             info.external_attr = (os.stat(path).st_mode & 0o777) << 16
             with open(path, "rb") as fh:
                 zf.writestr(info, fh.read())
