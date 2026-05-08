@@ -268,6 +268,26 @@ gboolean exact_chess_backend_try_move(ExactChessBackend *backend,
     return TRUE;
 }
 
+gboolean exact_chess_backend_can_move(ExactChessBackend *backend,
+                                      int row0,
+                                      int col0,
+                                      int row1,
+                                      int col1,
+                                      char promotion_piece) {
+    ChessPlayer *player = chess_game_get_current_player((ChessGame *) backend->game);
+    char piece;
+    char promo = '\0';
+    char move[6];
+
+    piece = exact_chess_backend_piece_at(backend, row0, col0);
+    if ((piece == 'P' || piece == 'p') && is_promotion_row(row1)) {
+        promo = (char) g_ascii_tolower(promotion_piece != '\0' ? promotion_piece : 'q');
+    }
+
+    format_move(row0, col0, row1, col1, promo, move);
+    return chess_player_move(player, move, FALSE);
+}
+
 gboolean exact_chess_backend_apply_uci(ExactChessBackend *backend, const char *move, char san_out[32]) {
     ChessPlayer *player = chess_game_get_current_player((ChessGame *) backend->game);
     gboolean ok = chess_player_move(player, move, TRUE);

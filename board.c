@@ -327,6 +327,13 @@ static gboolean board_draw_piece_svg(BoardState *state, cairo_t *cr, char piece,
     return TRUE;
 }
 
+static gboolean board_selected_piece_can_move_to(BoardState *state, int row, int col);
+static void board_draw_target_marker(cairo_t *cr,
+                                     gdouble x,
+                                     gdouble y,
+                                     gdouble square_size,
+                                     gboolean capture);
+
 gboolean board_draw(BoardState *state, GtkWidget *widget, cairo_t *cr) {
     gdouble origin_x;
     gdouble origin_y;
@@ -355,6 +362,7 @@ gboolean board_draw(BoardState *state, GtkWidget *widget, cairo_t *cr) {
             gboolean selected = row == state->selected_row && col == state->selected_col;
             gboolean last_from = row == state->last_from_row && col == state->last_from_col;
             gboolean last_to = row == state->last_to_row && col == state->last_to_col;
+            gboolean legal_target = board_selected_piece_can_move_to(state, row, col);
 
             if (selected) {
                 cairo_set_source_rgb(cr, 0.20, 0.20, 0.20);
@@ -396,6 +404,10 @@ gboolean board_draw(BoardState *state, GtkWidget *widget, cairo_t *cr) {
                     board_draw_piece(cr, piece, x, y, square_size);
                 }
             }
+
+            if (legal_target) {
+                board_draw_target_marker(cr, x, y, square_size, piece != '.');
+            }
         }
     }
 
@@ -410,6 +422,51 @@ static gboolean board_piece_matches_turn(BoardState *state, char piece) {
         return isupper((unsigned char) piece) != 0;
     }
     return islower((unsigned char) piece) != 0;
+}
+
+static gboolean board_selected_piece_can_move_to(BoardState *state, int row, int col) {
+    char target;
+
+    if (state->selected_row < 0 || state->selected_col < 0) {
+        return FALSE;
+    }
+    if (state->selected_row == row && state->selected_col == col) {
+        return FALSE;
+    }
+
+    target = exact_chess_backend_piece_at(&state->backend, row, col);
+    if (board_piece_matches_turn(state, target)) {
+        return FALSE;
+    }
+
+    return exact_chess_backend_can_move(&state->backend,
+                                        state->selected_row,
+                                        state->selected_col,
+                                        row,
+                                        col,
+                                        'q');
+}
+
+static void board_draw_target_marker(cairo_t *cr,
+                                     gdouble x,
+                                     gdouble y,
+                                     gdouble square_size,
+                                     gboolean capture) {
+    gdouble cx = x + square_size / 2.0;
+    gdouble cy = y + square_size / 2.0;
+
+    cairo_save(cr);
+    if (capture) {
+        cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 0.55);
+        cairo_set_line_width(cr, square_size * 0.075);
+        cairo_arc(cr, cx, cy, square_size * 0.38, 0.0, 6.28318);
+        cairo_stroke(cr);
+    } else {
+        cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 0.35);
+        cairo_arc(cr, cx, cy, square_size * 0.13, 0.0, 6.28318);
+        cairo_fill(cr);
+    }
+    cairo_restore(cr);
 }
 
 gboolean board_handle_click(BoardState *state,

@@ -6,6 +6,11 @@
 # Generated package tree
 /dist/
 /release/
+/pwa/dist/
+/pwa/node_modules/
+/pwa/*.tsbuildinfo
+/pwa/vite.config.js
+/pwa/vite.config.d.ts
 
 # Local optional engine drop-in
 /bin/armhf/stockfish

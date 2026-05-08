@@ -28,6 +28,12 @@ gboolean exact_chess_backend_try_move(ExactChessBackend *backend,
                                        char promotion_piece,
                                        char move_out[6],
                                        char san_out[32]);
+gboolean exact_chess_backend_can_move(ExactChessBackend *backend,
+                                      int row0,
+                                      int col0,
+                                      int row1,
+                                      int col1,
+                                      char promotion_piece);
 gboolean exact_chess_backend_apply_uci(ExactChessBackend *backend, const char *move, char san_out[32]);
 gboolean exact_chess_backend_apply_move_text(ExactChessBackend *backend, const char *move_text, char san_out[32], char uci_out[6]);
 void exact_chess_backend_undo(ExactChessBackend *backend);
