@@ -58,12 +58,21 @@ select {
 .toolbar button,
 .settings select {
   width: 100%;
+  min-width: 0;
   min-height: 46px;
   border: 2px solid #111;
   background: #f7f7f7;
   color: #111;
   border-radius: 10px;
   font-weight: 800;
+}
+
+.toolbar button {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0 4px;
+  font-size: clamp(0.72rem, 2.6vw, 1rem);
 }
 
 .toolbar button:active,
@@ -79,6 +88,7 @@ select {
 .settings label {
   display: grid;
   gap: 4px;
+  min-width: 0;
   font-size: 0.82rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -223,11 +233,6 @@ select {
 @media (max-width: 760px) {
   .app {
     padding: 10px;
-  }
-
-  .toolbar,
-  .settings {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .play-area {
