@@ -24,7 +24,7 @@ export function createBrowserStockfish(callbacks: EngineCallbacks): BrowserStock
   let worker: Worker | null = null;
 
   try {
-    worker = new Worker("/engine/stockfish.js");
+    worker = new Worker(`${import.meta.env.BASE_URL}engine/stockfish.js`);
   } catch (error) {
     callbacks.onError(error instanceof Error ? error.message : String(error));
     return disabledEngine("failed");

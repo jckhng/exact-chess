@@ -1,13 +1,13 @@
 const CACHE_NAME = "exact-chess-pwa-v2";
 const APP_SHELL = [
-  "/",
-  "/index.html",
-  "/manifest.webmanifest",
-  "/icons/icon.svg",
-  "/icons/icon-192.png",
-  "/icons/icon-512.png",
-  "/engine/stockfish.js",
-  "/licenses/stockfish.js-GPL-3.0.txt"
+  "./",
+  "index.html",
+  "manifest.webmanifest",
+  "icons/icon.svg",
+  "icons/icon-192.png",
+  "icons/icon-512.png",
+  "engine/stockfish.js",
+  "licenses/stockfish.js-GPL-3.0.txt"
 ];
 
 self.addEventListener("install", (event) => {
